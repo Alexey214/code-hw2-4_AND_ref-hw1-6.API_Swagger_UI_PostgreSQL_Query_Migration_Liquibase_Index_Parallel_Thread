@@ -22,6 +22,14 @@ public class Faculty {
 //        this.color = color;
 //    }
 
+    public Collection<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Collection<Student> students) {
+        this.students = students;
+    }
+
     public Long getId() {
         return id;
     }

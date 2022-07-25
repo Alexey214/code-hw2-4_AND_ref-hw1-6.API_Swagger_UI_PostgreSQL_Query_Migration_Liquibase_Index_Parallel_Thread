@@ -16,6 +16,13 @@ public class Student {
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 //    public Student(String name, int age) {
 //        ++this.id;
 //        this.name = name;
