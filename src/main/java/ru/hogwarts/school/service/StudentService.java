@@ -1,50 +1,32 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
 
-    private Map<Long, Student> studentMap = new HashMap<>();
-    private Long generatedStudentId = 0L;
+    private final StudentRepository studentRepository;
 
-    @PostConstruct
-    void init() {
-        ++generatedStudentId;
-        Student student1 = new Student("Иван", 10);
-        student1.setId(generatedStudentId);
-        studentMap.put(generatedStudentId, student1);
-
-        ++generatedStudentId;
-        Student student2 = new Student("Петр", 15);
-        student2.setId(generatedStudentId);
-        studentMap.put(generatedStudentId, student2);
-
-        ++generatedStudentId;
-        Student student3 = new Student("Илья", 20);
-        student3.setId(generatedStudentId);
-        studentMap.put(generatedStudentId, student3);
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
     public Student createStudent(Student student) {
-        student.setId(++generatedStudentId);
-        studentMap.put(generatedStudentId, student);
+        studentRepository.save(student);
         return student;
     }
 
     public Student getStudent(Long studentId) {
-        return studentMap.get(studentId);
+        return studentRepository.findById(studentId).get();
     }
 
     public Collection<Student> getAllStudent() {
-        return studentMap.values();
+        return studentRepository.findAll();
     }
 
     public Collection<Student> getAllStudentWhitAge(int age) {
@@ -55,16 +37,10 @@ public class StudentService {
     }
 
     public Student updateStudent(Student student) {
-        if (studentMap.containsKey(student.getId())) {
-            return studentMap.put(student.getId(), student);
-        }
-        return null;
+        return studentRepository.save(student);
     }
 
-    public Student deleteStudent(Long studentId) {
-        if (studentMap.containsKey(studentId)) {
-            return studentMap.remove(studentId);
-        }
-        return null;
+    public void deleteStudent(Long studentId) {
+        studentRepository.deleteById(studentId);
     }
 }
