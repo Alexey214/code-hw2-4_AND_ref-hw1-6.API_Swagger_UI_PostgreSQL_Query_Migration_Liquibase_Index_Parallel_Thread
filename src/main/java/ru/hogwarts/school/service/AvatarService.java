@@ -27,26 +27,6 @@ public class AvatarService {
         this.studentService = studentService;
     }
 
-//    public Avatar createAvatar(Avatar avatar) {
-//        return avatarRepository.save(avatar);
-//    }
-//
-//    public Avatar getAvatar(Long id) {
-//        return avatarRepository.findById(id).get();
-//    }
-//
-//    public Collection<Avatar> getAvatars() {
-//        return avatarRepository.findAll();
-//    }
-//
-//    public Avatar updateAvatar(Avatar avatar) {
-//        return avatarRepository.save(avatar);
-//    }
-//
-//    public void deleteAvatar(Long id) {
-//        avatarRepository.deleteById(id);
-//    }
-
     public void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
         Student student = studentService.getStudent(studentId);
         Path filePath = Path.of(avatarsDir, student + "." + getExtensions(avatarFile.getOriginalFilename()));
