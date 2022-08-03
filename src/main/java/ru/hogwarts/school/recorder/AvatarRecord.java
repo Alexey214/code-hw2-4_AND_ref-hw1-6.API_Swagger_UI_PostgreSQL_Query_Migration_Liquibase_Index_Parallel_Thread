@@ -11,6 +11,7 @@ public class AvatarRecord {
     private byte[] data;
     private Student student;
 
+
     public Long getId() {
         return id;
     }

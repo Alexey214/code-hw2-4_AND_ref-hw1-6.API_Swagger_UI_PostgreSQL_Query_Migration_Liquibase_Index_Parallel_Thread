@@ -7,6 +7,7 @@ public class StudentRecord {
     private int age;
     private FacultyRecord faculty;
 
+
     public Long getId() {
         return id;
     }

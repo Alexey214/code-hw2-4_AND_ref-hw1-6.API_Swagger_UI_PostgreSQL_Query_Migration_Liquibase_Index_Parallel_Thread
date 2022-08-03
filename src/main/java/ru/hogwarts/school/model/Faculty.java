@@ -25,6 +25,7 @@ public class Faculty {
     public Faculty() {
     }
 
+
     public Collection<Student> getStudents() {
         return students;
     }

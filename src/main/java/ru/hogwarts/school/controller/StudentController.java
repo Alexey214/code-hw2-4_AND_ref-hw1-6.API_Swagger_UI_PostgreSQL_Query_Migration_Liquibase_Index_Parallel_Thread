@@ -55,4 +55,21 @@ public class StudentController {
     public FacultyRecord findByFacultyOfStudent(@PathVariable("id") long id) {
         return studentService.findByFacultyOfStudent(id);
     }
+
+    @GetMapping("/findCountOfAllStudents")
+    public Integer findCountOfAllStudents() {
+        return studentService.findCountOfAllStudents();
+    }
+
+    @GetMapping("/findAverageStudentAge")
+    public Integer findAverageStudentAge() {
+        return studentService.findAverageStudentAge();
+    }
+
+    @GetMapping("/{lastStudents}/students")
+    public List<StudentRecord> findLastsStudents(@PathVariable int lastStudents) {
+        return studentService.findLastsStudents(lastStudents);
+    }
+
+
 }

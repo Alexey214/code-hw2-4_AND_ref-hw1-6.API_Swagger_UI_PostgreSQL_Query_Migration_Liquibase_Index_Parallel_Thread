@@ -1,15 +1,20 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.component.RecordMapper;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.recorder.AvatarRecord;
 import ru.hogwarts.school.repository.AvatarRepository;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -21,10 +26,12 @@ public class AvatarService {
 
     private AvatarRepository avatarRepository;
     private StudentService studentService;
+    private RecordMapper recordMapper;
 
-    public AvatarService(AvatarRepository avatarRepository, StudentService studentService) {
+    public AvatarService(AvatarRepository avatarRepository, StudentService studentService, RecordMapper recordMapper) {
         this.avatarRepository = avatarRepository;
         this.studentService = studentService;
+        this.recordMapper = recordMapper;
     }
 
     public void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
@@ -58,4 +65,10 @@ public class AvatarService {
     }
 
 
+    public List<AvatarRecord> findAllStudents(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return avatarRepository.findAll(pageRequest).getContent().stream()
+                .map(recordMapper::toRecord)
+                .collect(Collectors.toList());
+    }
 }

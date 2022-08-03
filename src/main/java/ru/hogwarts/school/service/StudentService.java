@@ -1,7 +1,7 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
-import ru.hogwarts.school.model.component.RecordMapper;
+import ru.hogwarts.school.component.RecordMapper;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.exception.StudentIllegalArgumentException;
 import ru.hogwarts.school.exception.StudentNotFoundException;
@@ -88,5 +88,19 @@ public class StudentService {
             throw new FacultyNotFoundException();
         }
         return recordMapper.toRecord(studentTmp.getFaculty());
+    }
+
+    public Integer findCountOfAllStudents() {
+        return studentRepository.findCountOfAllStudents();
+    }
+
+    public Integer findAverageStudentAge() {
+        return studentRepository.findAverageStudentAge();
+    }
+
+    public List<StudentRecord> findLastsStudents(int lastStudents) {
+        return studentRepository.findLastsStudents(lastStudents).stream()
+                .map(recordMapper::toRecord)
+                .collect(Collectors.toList());
     }
 }
