@@ -9,18 +9,21 @@ public class Faculty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id = 0L;
+    private Long id;
     private String name;
     private String color;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "faculty")
+    @OneToMany(mappedBy = "faculty")
     private Collection<Student> students;
 
-//    public Faculty(String name, String color) {
-//        id++;
-//        this.name = name;
-//        this.color = color;
-//    }
+    public Faculty(Long id, String name, String color) {
+        this.id = id;
+        this.name = name;
+        this.color = color;
+    }
+
+    public Faculty() {
+    }
 
     public Collection<Student> getStudents() {
         return students;

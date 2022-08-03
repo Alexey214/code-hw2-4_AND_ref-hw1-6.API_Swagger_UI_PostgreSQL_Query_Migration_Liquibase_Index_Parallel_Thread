@@ -1,15 +1,16 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.recorder.FacultyRecord;
+import ru.hogwarts.school.recorder.StudentRecord;
 import ru.hogwarts.school.service.FacultyService;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @RestController
-@RequestMapping("faculty")
+@RequestMapping("/faculty")
 public class FacultyController {
 
     private final FacultyService facultyService;
@@ -18,62 +19,39 @@ public class FacultyController {
         this.facultyService = facultyService;
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
-        Faculty facultyTmp = facultyService.getFaculty(id);
-        if (facultyTmp == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(facultyTmp);
-    }
-
-    @GetMapping
-    public ResponseEntity<Collection<Faculty>> getAllFaculty() {
-        return ResponseEntity.ok(facultyService.getAllFaculty());
-    }
-
-    @GetMapping("color/{color}")
-    public ResponseEntity<Collection<Faculty>> getAllFacultyWhitAge(@PathVariable String color) {
-        Collection<Faculty> facultyTmp = facultyService.getAllFacultyWhitColor(color);
-        if (facultyTmp.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(facultyTmp);
-    }
-
-    @GetMapping("findByNameOrColor")
-    public ResponseEntity<Collection<Faculty>> findByNameOrColorBetween(@RequestParam(required = false) String name,
-                                                                        @RequestParam(required = false) String color) {
-        Collection<Faculty> facultyTmp = facultyService.findByNameOrColor(name, color);
-        if (facultyTmp.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(facultyTmp);
-    }
-
-    @GetMapping("findFacultyStudents/{faculty}")
-    public Set<String> findByFacultyOfStudent(@PathVariable String faculty) {
-        return facultyService.findFacultyStudents(faculty);
-    }
-
     @PostMapping
-    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
-        Faculty facultyTmp = facultyService.createFaculty(faculty);
-        return ResponseEntity.ok(facultyTmp);
+    public ResponseEntity<FacultyRecord> createFaculty(@RequestBody FacultyRecord facultyRecord) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(facultyService.createFaculty(facultyRecord));
+    }
+
+    @GetMapping("/{id}")
+    public FacultyRecord getFaculty(@PathVariable("id") Long id) {
+        return facultyService.readFaculty(id);
     }
 
     @PutMapping
-    public ResponseEntity<Faculty> updateFaculty(@RequestBody Faculty faculty) {
-        Faculty facultyTmp = facultyService.updateFaculty(faculty);
-        if (facultyTmp == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(facultyTmp);
+    public FacultyRecord updateFaculty(@RequestBody FacultyRecord facultyRecord) {
+        return facultyService.updateFaculty(facultyRecord);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Faculty> deleteFaculty(@PathVariable Long id) {
-        facultyService.deleteFaculty(id);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/{id}")
+    public FacultyRecord deleteFaculty(@PathVariable("id") Long id) {
+        return facultyService.deleteFaculty(id);
+    }
+
+    @GetMapping("/color/{color}")
+    public List<FacultyRecord> getAllFacultyWhitColor(@RequestParam("color") String color) {
+        return facultyService.readAllFacultyWhitColor(color);
+    }
+
+    @GetMapping("/findByNameOrColor")
+    public List<FacultyRecord> findByNameOrColorBetween(@RequestParam("colorOrName") String colorOrName) {
+        return facultyService.findByNameOrColor(colorOrName);
+    }
+
+    @GetMapping("/{id}/students")
+    public List<StudentRecord> findByFacultyOfStudent(@PathVariable("id") Long id) {
+        return facultyService.findFacultyStudent(id);
     }
 }
