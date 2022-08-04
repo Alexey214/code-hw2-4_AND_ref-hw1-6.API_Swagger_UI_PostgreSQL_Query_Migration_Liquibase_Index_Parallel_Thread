@@ -59,6 +59,6 @@ public class AvatarController {
     @GetMapping
     public List<AvatarRecord> findAllStudents(@RequestParam("page") Integer pageNumber,
                                               @RequestParam("size") Integer pageSize) {
-        return avatarService.findAllStudents(pageNumber, pageSize);
+        return avatarService.findAllAvatars(pageNumber, pageSize);
     }
 }

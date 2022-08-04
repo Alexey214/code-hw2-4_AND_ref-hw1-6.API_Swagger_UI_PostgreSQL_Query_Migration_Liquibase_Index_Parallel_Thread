@@ -65,7 +65,7 @@ public class AvatarService {
     }
 
 
-    public List<AvatarRecord> findAllStudents(Integer pageNumber, Integer pageSize) {
+    public List<AvatarRecord> findAllAvatars(Integer pageNumber, Integer pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent().stream()
                 .map(recordMapper::toRecord)
