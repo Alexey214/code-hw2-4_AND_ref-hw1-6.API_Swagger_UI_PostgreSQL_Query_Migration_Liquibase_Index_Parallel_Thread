@@ -1,17 +1,12 @@
 create table drivers
 (
-    id                    bigserial,
-    name                  varchar(255),
-    age                   integer,
-    driver_license_serial varchar(4),
-    driver_license_number varchar(6),
+    id                    bigserial primary key,
+    name                  varchar(255) unique,
+    age                   integer check ( age > 16),
+    driver_license_serial varchar(4) unique,
+    driver_license_number varchar(6) unique,
     driver_license        boolean     default false,
-    dt_create             timestamptz default now() not null,
-    constraint drivers_PK primary key (id),
-    constraint check_age check ( age > 0),
-    constraint driver_license_name_serial_number_unique unique (name,
-                                                                driver_license_serial,
-                                                                driver_license_number)
+    dt_create             timestamptz default now() not null
 );
 
 alter table drivers
@@ -19,12 +14,11 @@ alter table drivers
 
 create table cars
 (
-    id         bigserial,
+    id         bigserial primary key,
     mark       varchar(30),
     cost       numeric(10, 2),
     dt_create  timestamptz default now() not null,
-    drivers_id bigint references drivers (id),
-    constraint cars_PK primary key (id)
+    drivers_id bigint references drivers (id)
 );
 
 
