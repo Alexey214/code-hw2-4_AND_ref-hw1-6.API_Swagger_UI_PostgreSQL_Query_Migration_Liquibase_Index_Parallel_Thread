@@ -6,6 +6,9 @@ public class FacultyRecord {
     private String name;
     private String color;
 
+    public FacultyRecord() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -28,5 +31,14 @@ public class FacultyRecord {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "FacultyRecord{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
+                '}';
     }
 }

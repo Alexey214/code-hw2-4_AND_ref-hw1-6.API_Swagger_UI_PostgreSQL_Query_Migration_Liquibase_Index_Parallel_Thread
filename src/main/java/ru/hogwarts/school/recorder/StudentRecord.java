@@ -7,6 +7,8 @@ public class StudentRecord {
     private int age;
     private FacultyRecord faculty;
 
+    public StudentRecord() {
+    }
 
     public Long getId() {
         return id;
@@ -38,5 +40,15 @@ public class StudentRecord {
 
     public void setFaculty(FacultyRecord faculty) {
         this.faculty = faculty;
+    }
+
+    @Override
+    public String toString() {
+        return "StudentRecord{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", faculty=" + faculty +
+                '}';
     }
 }

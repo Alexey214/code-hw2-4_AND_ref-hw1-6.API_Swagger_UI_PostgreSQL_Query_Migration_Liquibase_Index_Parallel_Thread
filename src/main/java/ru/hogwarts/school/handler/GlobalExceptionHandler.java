@@ -1,5 +1,7 @@
 package ru.hogwarts.school.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,14 +14,18 @@ import ru.hogwarts.school.exception.StudentNotFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<String> handleStudentNotFoundException(StudentNotFoundException e) {
+        logger.error("Студент не найден!");
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("Студент не найден!");
     }
 
     @ExceptionHandler(FacultyNotFoundException.class)
     public ResponseEntity<String> handleFacultyNotFoundException(FacultyNotFoundException e) {
+        logger.error("Факультет не найден!");
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("Факультет не найден!");
     }
