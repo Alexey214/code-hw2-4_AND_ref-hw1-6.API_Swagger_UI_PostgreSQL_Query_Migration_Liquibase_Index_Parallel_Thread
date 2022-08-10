@@ -4,4 +4,6 @@ public interface InfoService {
 
     public String getPort();
 
+    public Integer bigInt();
+
 }

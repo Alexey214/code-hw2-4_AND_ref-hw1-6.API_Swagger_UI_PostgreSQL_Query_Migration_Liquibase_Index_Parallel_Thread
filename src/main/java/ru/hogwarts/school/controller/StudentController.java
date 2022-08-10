@@ -66,10 +66,18 @@ public class StudentController {
         return studentService.findAverageStudentAge();
     }
 
-    @GetMapping("/{lastStudents}/students")
-    public List<StudentRecord> findLastsStudents(@PathVariable int lastStudents) {
+    @GetMapping("/{lastStudents}")
+    public List<StudentRecord> findLastsStudents(@PathVariable("lastStudents") int lastStudents) {
         return studentService.findLastsStudents(lastStudents);
     }
 
+    @GetMapping("/findAndSortByFirstChar/{firstChar}")
+    public List<StudentRecord> findAndSortByFirstChar(@PathVariable("firstChar") String firstChar) {
+        return studentService.findAndSortByFirstChar(firstChar);
+    }
 
+    @GetMapping("/findAverageAgeOfStudents")
+    public Double findAverageAgeOfStudents() {
+        return studentService.findAverageAgeOfStudents();
+    }
 }

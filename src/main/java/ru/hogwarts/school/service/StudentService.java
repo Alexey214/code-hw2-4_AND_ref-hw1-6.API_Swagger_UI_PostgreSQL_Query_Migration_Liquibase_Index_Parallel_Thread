@@ -110,7 +110,7 @@ public class StudentService {
     }
 
     public Double findAverageStudentAge() {
-        logger.info("Запрашиваем средний возраст студентов в школе");
+        logger.info("Запрашиваем при помощи БД средний возраст студентов в школе");
         return studentRepository.findAverageStudentAge();
     }
 
@@ -119,5 +119,22 @@ public class StudentService {
         return studentRepository.findLastsStudents(lastStudents).stream()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
+    }
+
+    public List<StudentRecord> findAndSortByFirstChar(String character) {
+        logger.info("Запрашиваем список студентов, чьё имя начинается с {}: ", character);
+        return studentRepository.findAll().stream()
+                .sorted((s1, s2) -> (s1.getName().compareTo(s2.getName())))
+                .filter(student -> student.getName().startsWith(character))
+                .map(recordMapper::toRecord)
+                .collect(Collectors.toList());
+    }
+
+    public Double findAverageAgeOfStudents() {
+        logger.info("Запрашиваем при помощи stream() средний возраст студентов в школе");
+        Double averageAge = studentRepository.findAll().stream()
+                .map(recordMapper::toRecord)
+                .mapToDouble(value -> value.getAge()).average().getAsDouble();
+        return averageAge;
     }
 }

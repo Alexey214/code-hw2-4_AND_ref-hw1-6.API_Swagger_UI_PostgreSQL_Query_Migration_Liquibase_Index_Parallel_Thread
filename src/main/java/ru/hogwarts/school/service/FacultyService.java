@@ -80,4 +80,15 @@ public class FacultyService {
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
     }
+
+    public Integer findLongNameOfFaculty() {
+        logger.info("Запрашиваем самое длинное имя факультета");
+        Integer length = facultyRepository.findAll().stream()
+                .mapToInt(value -> value.getName().length())
+                .max()
+                .getAsInt();
+
+
+        return length;
+    }
 }

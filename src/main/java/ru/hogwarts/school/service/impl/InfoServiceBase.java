@@ -16,4 +16,8 @@ public class InfoServiceBase implements InfoService {
         return port;
     }
 
+    public Integer bigInt() {
+        return null;
+    }
+
 }

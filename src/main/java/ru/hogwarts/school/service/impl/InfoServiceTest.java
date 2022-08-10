@@ -16,4 +16,9 @@ public class InfoServiceTest implements InfoService {
         return port;
     }
 
+    @Override
+    public Integer bigInt() {
+        return null;
+    }
+
 }
