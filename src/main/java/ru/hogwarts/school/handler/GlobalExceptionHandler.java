@@ -14,18 +14,18 @@ import ru.hogwarts.school.exception.StudentNotFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(StudentNotFoundException.class)
     public ResponseEntity<String> handleStudentNotFoundException(StudentNotFoundException e) {
-        logger.error("Студент не найден!");
+        LOGGER.error("Студент не найден!");
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("Студент не найден!");
     }
 
     @ExceptionHandler(FacultyNotFoundException.class)
     public ResponseEntity<String> handleFacultyNotFoundException(FacultyNotFoundException e) {
-        logger.error("Факультет не найден!");
+        LOGGER.error("Факультет не найден!");
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("Факультет не найден!");
     }
