@@ -19,8 +19,7 @@ public class InfoServiceImpl implements InfoService {
     @Override
     public Integer bigInt() {
         int sum = Stream.iterate(1, a -> a + 1)
-                .limit(6_000_000_0)
-                .parallel()
+                .limit(1_000_000)
                 .reduce(0, (a, b) -> a + b);
         return sum;
     }

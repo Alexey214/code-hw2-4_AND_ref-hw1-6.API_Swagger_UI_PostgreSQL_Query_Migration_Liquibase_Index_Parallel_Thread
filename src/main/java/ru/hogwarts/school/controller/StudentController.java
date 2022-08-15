@@ -80,4 +80,16 @@ public class StudentController {
     public Double findAverageAgeOfStudents() {
         return studentService.findAverageAgeOfStudents();
     }
+
+    @GetMapping("/getStringNameInConsole")
+    public void getStringNameInConsole(@RequestParam("listLength") int listLength) {
+        studentService.getStudentNameInConsole(listLength);
+    }
+
+    @GetMapping("/getStudentNameInConsoleSynchronized")
+    public void getStudentNameInConsoleSynchronized(@RequestParam("listLength") int listLength) {
+        studentService.getStudentNameInConsoleSynchronized(listLength);
+    }
+
+
 }
