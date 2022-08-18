@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.service.InfoService;
 
+import java.util.stream.Stream;
+
 @Service
 public class InfoServiceImpl implements InfoService {
 
@@ -12,6 +14,15 @@ public class InfoServiceImpl implements InfoService {
 
     public String getPort() {
         return port;
+    }
+
+    @Override
+    public Integer bigInt() {
+        int sum = Stream.iterate(1, a -> a + 1)
+                .limit(6_000_000_0)
+                .parallel()
+                .reduce(0, (a, b) -> a + b);
+        return sum;
     }
 
 }

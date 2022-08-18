@@ -23,7 +23,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final FacultyRepository facultyRepository;
     private final RecordMapper recordMapper;
-    Logger logger = LoggerFactory.getLogger(StudentService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StudentService.class);
 
     public StudentService(StudentRepository studentRepository,
                           FacultyRepository facultyRepository,
@@ -34,25 +34,25 @@ public class StudentService {
     }
 
     public StudentRecord createStudent(StudentRecord studentRecord) {
-        logger.info("Добавляем студента: " + studentRecord);
+        LOGGER.info("Добавляем студента: " + studentRecord);
         Student student = recordMapper.toEntity(studentRecord);
         if (studentRecord.getFaculty() != null) {
             Faculty faculty = facultyRepository.findById(studentRecord.getFaculty().getId()).orElseThrow(FacultyNotFoundException::new);
             student.setFaculty(faculty);
         }
-        logger.debug("Добавлен студент: " + studentRecord);
+        LOGGER.debug("Добавлен студент: " + studentRecord);
         return recordMapper.toRecord(studentRepository.save(student));
     }
 
     public StudentRecord readStudent(Long id) {
-        logger.info("Получаем студента с id {}:", id);
+        LOGGER.info("Получаем студента с id {}:", id);
         return studentRepository.findById(id)
                 .map(recordMapper::toRecord)
                 .orElseThrow(StudentNotFoundException::new);
     }
 
     public StudentRecord updateStudent(StudentRecord studentRecord) {
-        logger.info("Изменяем студента: " + studentRecord);
+        LOGGER.info("Изменяем студента: " + studentRecord);
         Student studentTmp = studentRepository.findById(studentRecord.getId())
                 .orElseThrow(StudentNotFoundException::new);
         studentTmp.setAge(studentRecord.getAge());
@@ -61,26 +61,26 @@ public class StudentService {
     }
 
     public StudentRecord deleteStudent(Long id) {
-        logger.warn("Удаляем студента с id {}", id);
+        LOGGER.warn("Удаляем студента с id {}", id);
         Student studentTmp = studentRepository.findById(id)
                 .orElseThrow(StudentNotFoundException::new);
         studentRepository.delete(studentTmp);
-        logger.debug("Удалён студент с id {}", id);
+        LOGGER.debug("Удалён студент с id {}", id);
         return recordMapper.toRecord(studentTmp);
     }
 
 
     public List<StudentRecord> readAllStudentWhitAge(int age) {
-        logger.info("Запрашиваем студентов с возрастом {} лет", age);
+        LOGGER.info("Запрашиваем студентов с возрастом {} лет", age);
         return studentRepository.findAllByAge(age).stream()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
     }
 
     public List<StudentRecord> findByAgeBetween(int minAge, int maxAge) {
-        logger.info("Запрашиваем студентов с возрастом от {} до {} лет", minAge, maxAge);
+        LOGGER.info("Запрашиваем студентов с возрастом от {} до {} лет", minAge, maxAge);
         if (minAge > maxAge) {
-            logger.error("Ошибка при запросе студентов с возрастом от {} до {} лет", minAge, maxAge);
+            LOGGER.error("Ошибка при запросе студентов с возрастом от {} до {} лет", minAge, maxAge);
             throw new StudentIllegalArgumentException();
         }
         return studentRepository.findByAgeBetween(minAge, maxAge).stream()
@@ -89,11 +89,11 @@ public class StudentService {
     }
 
     public FacultyRecord findByFacultyOfStudent(long id) {
-        logger.info("Запрашиваем факультет студента с id {}", id);
+        LOGGER.info("Запрашиваем факультет студента с id {}", id);
         Student studentTmp = studentRepository.findById(id)
                 .orElseThrow(StudentNotFoundException::new);
         if (studentTmp.getFaculty() == null) {
-            logger.error("Ошибка при запросе факультета студента {}", id);
+            LOGGER.error("Ошибка при запросе факультета студента {}", id);
             throw new FacultyNotFoundException();
         }
         return recordMapper.toRecord(studentTmp.getFaculty());
@@ -105,19 +105,35 @@ public class StudentService {
     }
 
     public Integer findCountOfAllStudents() {
-        logger.info("Запрашиваем количество студентов в школе");
+        LOGGER.info("Запрашиваем количество студентов в школе");
         return studentRepository.findCountOfAllStudents();
     }
 
     public Double findAverageStudentAge() {
-        logger.info("Запрашиваем средний возраст студентов в школе");
+        LOGGER.info("Запрашиваем при помощи БД средний возраст студентов в школе");
         return studentRepository.findAverageStudentAge();
     }
 
     public List<StudentRecord> findLastsStudents(int lastStudents) {
-        logger.info("Запрашиваем список последних {} добавленных студентов", lastStudents);
+        LOGGER.info("Запрашиваем список последних {} добавленных студентов", lastStudents);
         return studentRepository.findLastsStudents(lastStudents).stream()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
+    }
+
+    public List<StudentRecord> findAndSortByFirstChar(String character) {
+        LOGGER.info("Запрашиваем список студентов, чьё имя начинается с {}: ", character);
+        return studentRepository.findAll().stream()
+                .sorted((s1, s2) -> (s1.getName().compareTo(s2.getName())))
+                .filter(student -> student.getName().startsWith(character))
+                .map(recordMapper::toRecord)
+                .collect(Collectors.toList());
+    }
+
+    public Double findAverageAgeOfStudents() {
+        LOGGER.info("Запрашиваем при помощи stream() средний возраст студентов в школе");
+        return studentRepository.findAll().stream()
+                .map(recordMapper::toRecord)
+                .mapToDouble(StudentRecord::getAge).average().getAsDouble();
     }
 }

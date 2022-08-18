@@ -18,4 +18,8 @@ public class InfoController {
         return infoService.getPort();
     }
 
+    @GetMapping("/bigInt")
+    public Integer bigInt() {
+        return infoService.bigInt();
+    }
 }
