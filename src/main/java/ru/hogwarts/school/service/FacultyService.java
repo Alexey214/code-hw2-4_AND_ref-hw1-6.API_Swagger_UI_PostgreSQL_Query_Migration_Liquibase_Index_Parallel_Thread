@@ -11,6 +11,7 @@ import ru.hogwarts.school.recorder.FacultyRecord;
 import ru.hogwarts.school.recorder.StudentRecord;
 import ru.hogwarts.school.repository.FacultyRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,11 +82,12 @@ public class FacultyService {
                 .collect(Collectors.toList());
     }
 
-    public Integer findLongNameOfFaculty() {
+    public FacultyRecord findLongNameOfFaculty() {
         LOGGER.info("Запрашиваем самое длинное имя факультета");
         return facultyRepository.findAll().stream()
-                .mapToInt(value -> value.getName().length())
-                .max()
-                .getAsInt();
+                .map(recordMapper::toRecord)
+//                .map(FacultyRecord::getName)
+                .max(Comparator.comparingInt(f -> f.getName().length()))
+                .orElseThrow(FacultyNotFoundException::new);
     }
 }

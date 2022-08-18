@@ -56,7 +56,7 @@ public class FacultyController {
     }
 
     @GetMapping("/findLongNameOfFaculty")
-    public Integer findLongNameOfFaculty() {
+    public FacultyRecord findLongNameOfFaculty() {
         return facultyService.findLongNameOfFaculty();
     }
 }

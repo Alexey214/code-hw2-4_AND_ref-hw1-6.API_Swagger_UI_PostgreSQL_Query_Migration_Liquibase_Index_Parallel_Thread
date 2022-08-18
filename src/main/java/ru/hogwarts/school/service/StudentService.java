@@ -124,9 +124,11 @@ public class StudentService {
     public List<StudentRecord> findAndSortByFirstChar(String character) {
         LOGGER.info("Запрашиваем список студентов, чьё имя начинается с {}: ", character);
         return studentRepository.findAll().stream()
+                .peek(student -> student.setName(student.getName().toLowerCase()))
+                .filter(student -> student.getName().startsWith(character.toLowerCase()))
                 .sorted((s1, s2) -> (s1.getName().compareTo(s2.getName())))
-                .filter(student -> student.getName().startsWith(character))
                 .map(recordMapper::toRecord)
+                .peek(studentRecord -> studentRecord.setName(studentRecord.getName().toUpperCase()))
                 .collect(Collectors.toList());
     }
 
@@ -134,6 +136,48 @@ public class StudentService {
         LOGGER.info("Запрашиваем при помощи stream() средний возраст студентов в школе");
         return studentRepository.findAll().stream()
                 .map(recordMapper::toRecord)
-                .mapToDouble(StudentRecord::getAge).average().getAsDouble();
+                .mapToDouble(StudentRecord::getAge).average().orElseThrow(StudentNotFoundException::new);
     }
+
+    public void getStudentNameInConsole(int listLength) {
+        List<String> nameList = studentRepository.findNameList();
+
+        System.out.println("\nОсновной поток:");
+        printStudentName(nameList, 0, listLength);
+
+        new Thread(() -> {
+            System.out.println("\nДополнительный поток 1:");
+            printStudentName(nameList, listLength, listLength);
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("\nДополнительный поток 2:");
+            printStudentName(nameList, listLength + listLength, listLength);
+        }).start();
+    }
+
+    public void getStudentNameInConsoleSynchronized(int listLength) {
+        List<String> nameList = studentRepository.findNameList();
+        System.out.println("\nОсновной поток:");
+        printSynchronizedStudentName(nameList, 0, listLength);
+
+        new Thread(() -> {
+            System.out.println("\nДополнительный поток 1:");
+            printSynchronizedStudentName(nameList, listLength, listLength);
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("\nДополнительный поток 2:");
+            printSynchronizedStudentName(nameList, listLength + listLength, listLength);
+        }).start();
+    }
+
+    private void printStudentName(List<String> studentNamesList, int skip, int limit) {
+        studentNamesList.stream().skip(skip).limit(limit).forEach(System.out::println);
+    }
+
+    private synchronized void printSynchronizedStudentName(List<String> studentNamesList, int skip, int limit) {
+        studentNamesList.stream().skip(skip).limit(limit).forEach(System.out::println);
+    }
+
 }
